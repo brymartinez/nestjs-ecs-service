@@ -21,10 +21,13 @@ export class Payment {
   status: PaymentStatus;
 
   @Column({ name: 'reference_number' })
-  refNo: number;
+  refNo: string;
 
   @Column({ name: 'amount' })
   amount: number;
+
+  @Column({ name: 'payment_method' })
+  paymentMethod: string;
 
   @CreateDateColumn({
     name: 'created_at',
