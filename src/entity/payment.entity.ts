@@ -12,10 +12,15 @@ export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('status')
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: PaymentStatus,
+    default: PaymentStatus.CREATED,
+  })
   status: PaymentStatus;
 
-  @Column('amount')
+  @Column({ name: 'amount' })
   amount: number;
 
   @CreateDateColumn({
