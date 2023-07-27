@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { APIError } from './api-error';
 
-export class ValidationException extends HttpException {
-  constructor(msg: string) {
+export class InvalidStateException extends HttpException {
+  constructor() {
     const error: APIError = {
-      code: 'PE111',
-      msg,
+      code: 'PE002',
+      msg: 'Payment state invalid.',
     };
     super(error, HttpStatus.BAD_REQUEST);
   }

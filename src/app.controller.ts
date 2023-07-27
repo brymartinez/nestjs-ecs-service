@@ -15,6 +15,9 @@ import { PaymentStatus } from './shared/enums';
 import { PostPaymentDTO } from './dto/post-payment.dto';
 import { ResponseInterceptor } from './interceptors/response/response.interceptor';
 import { ValidationPipe } from './pipes/validation/validation.pipe';
+import { StatusPipe } from './pipes/status/status.pipe';
+import { PaymentPipe } from './pipes/payment/payment.pipe';
+import { RefNoPipe } from './pipes/refno/ref-no.pipe';
 
 @Controller('v1') // TODO - use versioning
 @UseInterceptors(ResponseInterceptor)
@@ -32,32 +35,49 @@ export class AppController {
   }
 
   @Get(':id')
-  async getPayment(@Param() id: string): Promise<Payment> {
-    return this.paymentRepository.findOneBy({ id });
+  async getPayment(
+    @Param('id', PaymentPipe) payment: Payment,
+  ): Promise<Payment> {
+    return payment;
   }
 
   @Get()
-  async getPaymentByRRN(@Query('rrn') rrn: string): Promise<Payment> {
-    return this.paymentRepository.findOneBy({ refNo: rrn });
+  async getPaymentByRefNo(
+    @Query('rrn', RefNoPipe) payment: Payment,
+  ): Promise<Payment> {
+    return payment;
   }
 
   @Post(':id')
   async postPayment(
-    @Param() id: string,
-    @Body(ValidationPipe) dto: PostPaymentDTO,
+    @Param('id', PaymentPipe, new StatusPipe([PaymentStatus.CREATED]))
+    payment: Payment,
+    @Body(ValidationPipe)
+    dto: PostPaymentDTO,
   ): Promise<Payment> {
     return this.paymentRepository.save({
-      id,
-      status: PaymentStatus.SUCCESS, // or FAILED
+      ...payment,
       ...dto,
+      status: PaymentStatus.SUCCESS,
     });
   }
 
   @Post(':id/reverse')
-  async reversePayment(@Param() id: string): Promise<Payment> {
+  async reversePayment(
+    @Param(
+      'id',
+      PaymentPipe,
+      new StatusPipe([PaymentStatus.CREATED, PaymentStatus.SUCCESS]),
+    )
+    payment: Payment,
+  ): Promise<Payment> {
+    const finalStatus: PaymentStatus =
+      payment.status === PaymentStatus.CREATED
+        ? PaymentStatus.CANCELLED
+        : PaymentStatus.REVERSED;
     return this.paymentRepository.save({
-      id,
-      status: PaymentStatus.REVERSED, // or CANCELLED
+      ...payment,
+      status: finalStatus,
     });
   }
 }
