@@ -6,6 +6,8 @@ import {
   Post,
   Query,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './entity/payment.entity';
@@ -13,9 +15,11 @@ import { Repository } from 'typeorm';
 import { CreatePaymentDTO } from './dto/create-payment.dto';
 import { PaymentStatus } from './shared/enums';
 import { PostPaymentDTO } from './dto/post-payment.dto';
+import { ResponseInterceptor } from './interceptors/response/response.interceptor';
 
 @Controller('v1')
-@UseInterceptors()
+@UseInterceptors(ResponseInterceptor)
+@UsePipes(ValidationPipe)
 export class AppController {
   constructor(
     @InjectRepository(Payment)
