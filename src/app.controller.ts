@@ -12,6 +12,7 @@ import { Payment } from './entity/payment.entity';
 import { Repository } from 'typeorm';
 import { CreatePaymentDTO } from './dto/create-payment.dto';
 import { PaymentStatus } from './shared/enums';
+import { PostPaymentDTO } from './dto/post-payment.dto';
 
 @Controller('v1')
 @UseInterceptors()
@@ -37,15 +38,19 @@ export class AppController {
   }
 
   @Post(':id')
-  async postPayment(@Param() id: string): Promise<Payment> {
+  async postPayment(
+    @Param() id: string,
+    @Body() dto: PostPaymentDTO,
+  ): Promise<Payment> {
     return this.paymentRepository.save({
       id,
       status: PaymentStatus.SUCCESS, // or FAILED
+      ...dto,
     });
   }
 
   @Post(':id/reverse')
-  async reverse(@Param() id: string): Promise<Payment> {
+  async reversePayment(@Param() id: string): Promise<Payment> {
     return this.paymentRepository.save({
       id,
       status: PaymentStatus.REVERSED, // or CANCELLED
