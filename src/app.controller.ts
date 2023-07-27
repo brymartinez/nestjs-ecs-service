@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   Post,
   Query,
@@ -18,6 +19,8 @@ import { ValidationPipe } from './pipes/validation/validation.pipe';
 import { StatusPipe } from './pipes/status/status.pipe';
 import { PaymentPipe } from './pipes/payment/payment.pipe';
 import { RefNoPipe } from './pipes/refno/ref-no.pipe';
+import { HeadersDTO } from './dto/headers.dto';
+import { PaymentHeaders } from './decorators/payment-headers';
 
 @Controller('v1') // TODO - use versioning
 @UseInterceptors(ResponseInterceptor)
@@ -29,9 +32,10 @@ export class AppController {
 
   @Post()
   async createPayment(
+    @PaymentHeaders(ValidationPipe) headers: HeadersDTO,
     @Body(ValidationPipe) dto: CreatePaymentDTO,
   ): Promise<Payment> {
-    return this.paymentRepository.save(dto);
+    return this.paymentRepository.save({ ...dto, ...headers });
   }
 
   @Get(':id')
