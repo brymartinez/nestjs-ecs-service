@@ -20,6 +20,9 @@ export class Payment {
   })
   status: PaymentStatus;
 
+  @Column({ name: 'reference_number' })
+  refNo: number;
+
   @Column({ name: 'amount' })
   amount: number;
 
