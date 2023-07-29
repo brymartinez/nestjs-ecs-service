@@ -1,23 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { Payment } from './entity/payment.entity';
-import { HeadersDTO } from './dto/headers.dto';
 import { PaymentStatus } from './shared/enums';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-const HEADERS: HeadersDTO = {
-  refNo: 'ref-no',
-};
-
-const PAYMENT: Payment = {
-  id: 'payment-id',
-  status: PaymentStatus.CREATED,
-  refNo: 'ref-no',
-  amount: 3000,
-  createdAt: new Date('2020-01-01'),
-  updatedAt: new Date('2020-01-01'),
-};
+import { PAYMENT, HEADERS } from './constants/test-constants';
 
 describe('AppController', () => {
   let appController: AppController;
