@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Logger,
   Param,
   Post,
   Query,
@@ -40,6 +39,7 @@ export class AppController {
 
   @Get(':id')
   async getPayment(
+    @PaymentHeaders(ValidationPipe) _headers: HeadersDTO,
     @Param('id', PaymentPipe) payment: Payment,
   ): Promise<Payment> {
     return payment;
@@ -47,6 +47,7 @@ export class AppController {
 
   @Get()
   async getPaymentByRefNo(
+    @PaymentHeaders(ValidationPipe) _headers: HeadersDTO,
     @Query('rrn', RefNoPipe) payment: Payment,
   ): Promise<Payment> {
     return payment;
@@ -54,6 +55,7 @@ export class AppController {
 
   @Post(':id')
   async postPayment(
+    @PaymentHeaders(ValidationPipe) _headers: HeadersDTO,
     @Param('id', PaymentPipe, new StatusPipe([PaymentStatus.CREATED]))
     payment: Payment,
     @Body(ValidationPipe)
@@ -68,6 +70,7 @@ export class AppController {
 
   @Post(':id/reverse')
   async reversePayment(
+    @PaymentHeaders(ValidationPipe) _headers: HeadersDTO,
     @Param(
       'id',
       PaymentPipe,

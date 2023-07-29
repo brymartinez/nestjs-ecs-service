@@ -27,7 +27,7 @@ export class Payment {
   amount: number;
 
   @Column({ name: 'payment_method', nullable: true })
-  paymentMethod: string;
+  paymentMethod?: string;
 
   @CreateDateColumn({
     name: 'created_at',
