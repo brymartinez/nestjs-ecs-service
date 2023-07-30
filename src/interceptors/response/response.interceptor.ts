@@ -15,17 +15,11 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Payment> {
 
     Logger.log(request.headers, 'Headers');
 
-    if (Object.keys(request.body).length) {
-      Logger.log(request.body, 'Body');
-    }
+    Logger.log(request.body, 'Body');
 
-    if (Object.keys(request.params).length) {
-      Logger.log(request.params, 'Params');
-    }
+    Logger.log(request.params, 'Params');
 
-    if (Object.keys(request.query).length) {
-      Logger.log(request.query, 'Query');
-    }
+    Logger.log(request.query, 'Query');
 
     return next.handle().pipe(
       map((response: Payment) => ({
